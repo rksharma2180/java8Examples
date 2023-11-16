@@ -1,0 +1,74 @@
+Spliterator
+An object for traversing and partitioning elements of a source. The source of elements covered by a Spliterator could be, 
+for example, an array, a Collection, an IO channel, or a generator function. A Spliterator may traverse elements individually 
+(tryAdvance()) or sequentially in bulk(forEachRemaining()). 
+
+A Spliterator may also partition off some of its elements (using trySplit) as another Spliterator, to be used in 
+possibly-parallel operations. Operations using a Spliterator that cannot split, or does so in a highly imbalanced or 
+in efficient manner, are unlikely to benefit from parallelism. Traversal and splitting exhaust elements; each Spliterator is 
+useful for only a single bulk computation. 
+
+A Spliterator also reports a set of characteristics() of its structure, source, and elements from among ORDERED, DISTINCT, 
+SORTED, SIZED, NONNULL, IMMUTABLE, CONCURRENT, and SUBSIZED. These maybe employed by Spliterator clients to control, 
+specialize or simplify computation. For example, a Spliterator for a Collection would report SIZED, a Spliterator for a Set 
+would report DISTINCT, and a Spliterator for a SortedSet would also report SORTED. Characteristics are reported as a simple 
+unioned bit set.Some characteristics additionally constrain method behavior; for example if ORDERED, traversal methods must 
+conform to their documented ordering.New characteristics may be defined in the future, so implementors should not assign 
+meanings to unlisted values. 
+
+A Spliterator that does not report IMMUTABLE or CONCURRENT is expected to have a documented policy concerning:when the 
+spliterator binds to the element source; and detection of structural interference of the element source detected after binding. 
+A late-binding Spliterator binds to the source of elements at thepoint of first traversal, first split, or first query for 
+estimated size,rather than at the time the Spliterator is created. A Spliterator that isnot late-binding binds to the source of 
+elements at the point ofconstruction or first invocation of any method. Modifications made to thesource prior to binding are 
+reflected when the Spliterator is traversed.After binding a Spliterator should, on a best-effort basis, 
+throw ConcurrentModificationException if structural interference isdetected. Spliterators that do this are called fail-fast. 
+Thebulk traversal method (forEachRemaining()) of aSpliterator may optimize traversal and check for structural interferenceafter
+ all elements have been traversed, rather than checking per-element andfailing immediately. 
+
+Spliterators can provide an estimate of the number of remaining elements via the estimateSize method. Ideally, as reflected in 
+characteristic SIZED, this value corresponds exactly to the number of elements that would be encountered in a successful 
+traversal. However, even when not exactly known, an estimated value may still be useful to operations being performed on the 
+source, such as helping to determine whether it ispreferable to split further or traverse the remaining elements sequentially. 
+
+Despite their obvious utility in parallel algorithms, spliterators are not expected to be thread-safe; instead, implementations 
+of parallel algorithms using spliterators should ensure that the spliterator is only used by one thread at a time. 
+This is generally easy to attain via serial thread-confinement, which often is a natural consequence of typicalparallel 
+algorithms that work by recursive decomposition. A thread calling trySplit() may hand over the returned Spliterator to another 
+thread,which in turn may traverse or further split that Spliterator. The behaviour of splitting and traversal is undefined if 
+two or more threads operate concurrently on the same spliterator. If the original thread hands aspliterator off to another 
+thread for processing, it is best if that hand off occurs before any elements are consumed with tryAdvance(), as certain 
+guarantees (such as the accuracy of estimateSize() for SIZED spliterators) are only valid beforetraversal has begun. 
+
+Primitive subtype specializations of Spliterator are provided for int, long, and double values.The subtype default 
+implementations of Spliterator.tryAdvance(java.util.function.Consumer)and 
+Spliterator.forEachRemaining(java.util.function.Consumer) boxprimitive values to instances of their corresponding wrapper class.
+Such boxing may undermine any performance advantages gained by using the primitive specializations. To avoid boxing, the 
+corresponding primitive-based methodsshould be used. For example, Spliterator.OfInt.tryAdvance(java.util.function.IntConsumer) 
+and Spliterator.OfInt.forEachRemaining(java.util.function.IntConsumer)should be used in preference to 
+Spliterator.OfInt.tryAdvance(java.util.function.Consumer) and Spliterator.OfInt.forEachRemaining(java.util.function.Consumer). 
+Traversal of primitive values using boxing-based methods tryAdvance() and forEachRemaining()does not affect the order in which 
+the values, transformed to boxed values,are encountered.
+Type Parameters:<T> the type of elements returned by this SpliteratorSince:1.8See Also:CollectionAPI Note:
+Spliterators, like Iterators, are for traversing the elements ofa source. The Spliterator API was designed to support 
+efficientparallel traversal in addition to sequential traversal, by supportingdecomposition as well as single-element iteration.
+ In addition, theprotocol for accessing elements via a Spliterator is designed to imposesmaller per-element overhead than 
+ Iterator, and to avoid the inherentrace involved in having separate methods for hasNext() and next(). 
+
+For mutable sources, arbitrary and non-deterministic behavior may occur ifthe source is structurally interfered with 
+(elements added, replaced, orremoved) between the time that the Spliterator binds to its data source andthe end of traversal. 
+For example, such interference will produce arbitrary,non-deterministic results when using the java.util.stream framework. 
+
+Structural interference of a source can be managed in the following ways(in approximate order of decreasing desirability): 
+•The source cannot be structurally interfered with. 
+For example, an instance of java.util.concurrent.CopyOnWriteArrayList is an immutable source.A Spliterator created from the source reports a characteristic of IMMUTABLE.
+•The source manages concurrent modifications. 
+For example, a key set of a java.util.concurrent.ConcurrentHashMapis a concurrent source. A Spliterator created from the source reports acharacteristic of CONCURRENT.
+•The mutable source provides a late-binding and fail-fast Spliterator. 
+Late binding narrows the window during which interference can affectthe calculation; fail-fast detects, on a best-effort basis, that structuralinterference has occurred after traversal has commenced and throws ConcurrentModificationException. For example, ArrayList,and many other non-concurrent Collection classes in the JDK, providea late-binding, fail-fast spliterator.
+•The mutable source provides a non-late-binding but fail-fast Spliterator. 
+The source increases the likelihood of throwing ConcurrentModificationException since the window of potentialinterference is larger.
+•The mutable source provides a late-binding and non-fail-fast Spliterator. 
+The source risks arbitrary, non-deterministic behavior after traversalhas commenced since interference is not detected. 
+•The mutable source provides a non-late-binding and non-fail-fastSpliterator. 
+The source increases the risk of arbitrary, non-deterministic behaviorsince non-detected interference may occur after construction. 
