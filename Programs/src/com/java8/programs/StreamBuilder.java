@@ -1,4 +1,4 @@
-package com.java8.questions;
+package com.java8.programs;
 
 import java.util.Arrays;
 import java.util.function.Consumer;

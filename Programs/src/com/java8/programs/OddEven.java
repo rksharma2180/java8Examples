@@ -1,4 +1,4 @@
-package com.java8.questions;
+package com.java8.programs;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +24,8 @@ public class OddEven {
 			System.out.println(k);
 			System.out.println(v);
 		});
-
+		
+		//GroupingBy Accept Function partitioningBy Accept Predicate
+		
 	}
 }
