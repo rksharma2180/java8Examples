@@ -1,6 +1,7 @@
 package com.java8.programs;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -19,8 +20,7 @@ public class StringOperations {
 
 		IntStream intStream = string.chars();
 
-		// <U> Stream<U> mapToObj(IntFunction<? extends U>
-		// mapper);
+		// <U> Stream<U> mapToObj(IntFunction<? extends U> mapper);
 		Map<Object, Long> collect = intStream.mapToObj(i -> (char) i).collect(groupingBy);
 
 		collect.forEach((k, v) -> {
@@ -32,8 +32,8 @@ public class StringOperations {
 		String collect2 = Arrays.asList("Ravi", "Kumar", "Sharma").stream()
 				.collect(Collectors.joining(" ", "MR. ", " The Great"));
 		System.out.println(collect2);
-
 		System.out.println("=====");
+
 		// Reverse Each word of a String
 		String s1 = "Reverse Each Word of a String 8Test";
 		System.out.println(Arrays.stream(s1.split(" ")).map(word -> new StringBuffer(word).reverse())
@@ -43,5 +43,16 @@ public class StringOperations {
 		// Find Strings which start with Number
 		Arrays.asList(s1.split(" ")).stream().filter(str -> Character.isDigit(str.charAt(0)))
 				.forEach(System.out::println);
+		
+		// Skipping element
+		List<String> asList2 = Arrays.asList("abc", "xyz", "oom", "mnh", "mlo", "ert");
+		System.out.println(asList2.stream().skip(asList2.size() - 1).findFirst().get());
+		
+		// String to Array of Number
+		String numbers = "1,2,3,4,5,6,7,8,9";
+		int[] array = Arrays.stream(numbers.split("")).mapToInt(Integer::parseInt).toArray();
+		for(int num: array) {
+			System.out.println(num);
+		}
 	}
 }

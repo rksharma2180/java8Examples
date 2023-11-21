@@ -32,7 +32,6 @@ public class ComparatorExample {
 		Stream<String> stream2 = Stream.of("of", "ravi", null, "farji", "maxwel", "a", "test");
 		stream2.sorted(Comparator.nullsLast(Comparator.naturalOrder())).forEach(System.out::println);
 		
-		
 		Stream<String> intStream = Stream.of("4","5","7","8","9","1","0");
 		ToIntFunction<String> toIntFunction =  (i) -> Integer.parseInt(i);
 		intStream.sorted(Comparator.comparingInt(toIntFunction)).forEach(System.out::println);

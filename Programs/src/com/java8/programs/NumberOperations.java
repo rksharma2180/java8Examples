@@ -19,24 +19,24 @@ public class NumberOperations {
 
 		// Reverse
 		numbers.stream().sorted(Comparator.reverseOrder()).forEach(System.out::print);
-
 		System.out.println("=====");
 
 		// Top 3 from sorted stream
 		numbers.stream().sorted().limit(3).forEach(System.out::println);
-
 		System.out.println("=====");
+
 		// Last 3 from sorted stream
 		numbers.stream().sorted(Comparator.reverseOrder()).limit(3).forEach(System.out::println);
+		System.out.println("=====");
 
 		// Sum of Integers
 		System.out.println(numbers.stream().mapToInt(i -> i).sum());
-
 		System.out.println("=====");
+
 		// Average
 		System.out.println(numbers.stream().mapToInt(i -> i).average().getAsDouble());
-
 		System.out.println("=====");
+
 		// Reverse An Integer Array
 		int[] arr = new int[] { 5, 6, 7, 8, 7, 4, 3, 9, 5, 3 };
 		int[] array = IntStream.rangeClosed(1, arr.length)// Returns a sequential ordered IntStream from
@@ -47,7 +47,7 @@ public class NumberOperations {
 					return arr[arr.length - i];
 
 				}).toArray();
-		// System.out.println("=====");
+		System.out.println("=====");
 		for (int num : array) {
 			System.out.println(num);
 		}
@@ -59,10 +59,6 @@ public class NumberOperations {
 		 * 
 		 * for (int num : array2) { System.out.println(num); }
 		 */
-
-		// Skipping element
-		List<String> asList2 = Arrays.asList("abc", "xyz", "oom", "mnh", "mlo", "ert");
-		System.out.println(asList2.stream().skip(asList2.size() - 1).findFirst().get());
 
 		System.out.println("=====");
 		// Frequency of Each element in Array
@@ -115,7 +111,7 @@ public class NumberOperations {
 		final Set<Integer> set = new HashSet<>();
 		Arrays.asList(6, 4, 32, 21, 45, 6, 5, 76, 7, 8, 8, 9, 5, 23, 4, 3).stream().filter(i -> !set.add(i))
 				.collect(Collectors.toSet()).forEach(System.out::println);
-
+		
 		System.out.println("=====");
 		List<int[]> asList = Arrays.asList(arr);
 		int[] is = asList.stream().skip(2).findFirst().get();

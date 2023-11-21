@@ -6,9 +6,7 @@ public class FibonacciSeries {
 	static int limit = 10;
 	
 	public static void main(String[] args) {
-		
 	
-		
 		/*
 		 * Returns an infinite sequential ordered Stream produced by iterative application of a function f to 
 		 * an initial element seed, producing a Stream consisting of seed, f(seed), f(f(seed)), etc. 
